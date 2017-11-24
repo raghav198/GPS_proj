@@ -23,6 +23,7 @@ void insert_hash(table_t table, pair_t record, uint32_t hash)
     while (table.data[hash + OFFSET(i)].active)
         i++;
     table.data[hash + OFFSET(i)].value = record;
+    table.data[hash + OFFSET(i)].active = true;
 }
 
 void insert(table_t table, pair_t record)

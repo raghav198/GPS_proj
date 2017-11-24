@@ -12,12 +12,16 @@ map_t * load_map(FILE * fp)
     map->positions = (pair_t *)malloc(sizeof(pair_t) * n_edges);
     map->edges = make_table(n_nodes);
     for (int i = 0; i < n_nodes; i++)
-        fscanf(fp, "%d %d", &map->positions[i].fst, &map->positions[i].snd);
-
+    {
+        int n, x, y;
+        fscanf(fp, "%d %d %d", &n, &x, &y);
+        map->positions[i].fst = x;
+        map->positions[i].snd = y;
+    }
     for (int i = 0; i < n_edges; i++)
     {
         pair_t pair;
-        fscanf(fp, "%d %d", &pair.fst, &pair.snd);
+        fscanf(fp, "%ud %ud", &pair.fst, &pair.snd);
         insert(map->edges, pair);
     }
 
@@ -27,8 +31,8 @@ map_t * load_map(FILE * fp)
 int main()
 {
     // test load_map
-    FILE * fp = fopen("map5x5.txt", "r");
+    FILE * fp = fopen("sample/map5x5.txt", "r");
     map_t * map = load_map(fp);
-
+    printf("Loaded map at %p\n", (void*)map);
     return 0;
 }
