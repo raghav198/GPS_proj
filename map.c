@@ -12,7 +12,7 @@ map_t * load_map(FILE * fp)
     map->positions = (pair_t *)malloc(sizeof(pair_t) * n_edges);
     map->edges = make_table(n_nodes);
     for (int i = 0; i < n_nodes; i++)
-        fscanf(fp, "%d %d", &map->positions[i].x, &map->positions[i].y);
+        fscanf(fp, "%d %d", &map->positions[i].fst, &map->positions[i].snd);
 
     for (int i = 0; i < n_edges; i++)
     {

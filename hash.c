@@ -52,8 +52,8 @@ uint32_t lookup(table_t table, pair_t record, pair_t * locations)
         pair_t p1 = locations[record.fst];
         pair_t p2 = locations[record.snd];
 
-        uint32_t dx = abs((int)p1.x - (int)p2.x);
-        uint32_t dy = abs((int)p1.y - (int)p2.y);
+        uint32_t dx = abs((int)p1.fst - (int)p2.fst);
+        uint32_t dy = abs((int)p1.snd - (int)p2.snd);
         // return the L1 distance (faster)
         return dx + dy;
     }

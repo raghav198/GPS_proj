@@ -16,16 +16,8 @@
 
 
 typedef struct {
-    // Use .x and .y for a point
-    // Use .fst and .snd for an edge
-    union {
-        uint32_t x;
         uint32_t fst;
-    };
-    union {
-        uint32_t y;
         uint32_t snd;
-    };
 } pair_t;
 
 typedef struct {
