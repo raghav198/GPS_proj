@@ -1,5 +1,5 @@
 #ifndef HASH_H
-#define HASH
+#define HASH_H
 
 #define ALPHA 2
 #define BETA 3
@@ -39,7 +39,7 @@ typedef struct {
 } table_t;
 
 // allocate a new table based on the number of edges
-table_t make_table(int);
+table_t make_table(uint32_t);
 // insert a pair into the table
 void insert(table_t, pair_t);
 // determine if an edge exists between two nodes

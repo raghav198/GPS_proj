@@ -1,6 +1,8 @@
 #include "hash.h"
+
 #include<stdlib.h>
 #include<math.h>
+#include<string.h>
 
 table_t make_table(uint32_t n_edges)
 {
@@ -29,14 +31,18 @@ void insert(table_t table, pair_t record)
     insert_hash(table, record, record.snd);
 }
 
-bool exists(table_t table, pair_t record)
-{
-    uint32_t hash = record.fst;
-    uint32_t i = 0;
 
+bool exists_hash(table_t table, pair_t record, uint32_t hash)
+{
+    uint32_t i = 0;
     while(table.data[hash + OFFSET(i)].active)
         i++;
-    return table.data[hash + OFFSET(i)].value == record;
+    return memcmp(&table.data[hash + OFFSET(i)].value, &record, sizeof(pair_t));
+}
+bool exists(table_t table, pair_t record)
+{
+    return exists_hash(table, record, record.fst) ||
+            exists_hash(table, record, record.snd);
 }
 
 uint32_t lookup(table_t table, pair_t record, pair_t * locations)
@@ -46,8 +52,8 @@ uint32_t lookup(table_t table, pair_t record, pair_t * locations)
         pair_t p1 = locations[record.fst];
         pair_t p2 = locations[record.snd];
 
-        uint32_t dx = abs(p1.x - p2.x);
-        uint32_t dy = abs(p1.y - p2.y);
+        uint32_t dx = abs((int)p1.x - (int)p2.x);
+        uint32_t dy = abs((int)p1.y - (int)p2.y);
         // return the L1 distance (faster)
         return dx + dy;
     }
