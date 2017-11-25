@@ -2,32 +2,38 @@
 
 #include<stdlib.h>
 
-void sink(pair_t * heap, int size, int root)
+void sink(queue_t * q, int size, int root)
 {
+    pair_t * heap = q->heap;
     pair_t top = heap[root];
     if (LEFT(root) < size && heap[LEFT(root)].snd  < top.snd)
     {
         SWAP(&heap[root], &heap[LEFT(root)]);
-        sink(heap, size, LEFT(root));
+        SWAP(&(q->locations[root]), &(q->locations[LEFT(root)]));
+        sink(q, size, LEFT(root));
     }
     else if (RIGHT(root) < size && heap[RIGHT(root)].snd < top.snd)
     {
         SWAP(&heap[root], &heap[RIGHT(root)]);
-        sink(heap, size, RIGHT(root));
+        SWAP(&(q->locations[root]), &(q->locations[RIGHT(root)]));
+        sink(q, size, RIGHT(root));
     }
 
 }
 
-void heapify(pair_t * heap, int size)
+void heapify(queue_t * q, int size)
 {
     for (int i = size / 2; i >= 0; i--)
-        sink(heap, size, i);
+        sink(q, size, i);
 }
 
 queue_t * new_queue(int size)
 {
     queue_t * q = (queue_t *) malloc(sizeof(queue_t));
     q->heap = (pair_t *) malloc(sizeof(uint32_t) * size);
+    q->locations = (int *) malloc(sizeof(int) * size);
+    for (int i = 0; i < size; i++)
+        q->locations[i] = -1;
     q->size = size;
     q->load = 0;
 
@@ -39,7 +45,8 @@ void qadd(queue_t * q, pair_t element)
     if (q->load < q->size)
     {
         q->heap[q->load] = element;
-        heapify(q->heap, ++q->load);
+        q->locations[q->load] = element.fst;
+        heapify(q, ++q->load);
     }
 }
 

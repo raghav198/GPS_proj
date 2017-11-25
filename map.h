@@ -11,5 +11,5 @@ typedef struct {
 } map_t;
 
 map_t * load_map(FILE *);
-
+uint32_t search(map_t *, pair_t);
 #endif

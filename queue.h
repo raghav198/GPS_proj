@@ -13,6 +13,7 @@
 
 typedef struct {
     pair_t * heap;
+    int * locations;
     int size;
     int load;
 } queue_t;

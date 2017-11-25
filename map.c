@@ -28,6 +28,12 @@ map_t * load_map(FILE * fp)
     return map;
 }
 
+uint32_t search(map_t * map, pair_t stops)
+{
+    return 12;   
+}
+
+#ifdef TEST_MAP
 int main()
 {
     // test load_map
@@ -36,3 +42,4 @@ int main()
     printf("Loaded map at %p\n", (void*)map);
     return 0;
 }
+#endif
