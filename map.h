@@ -3,11 +3,13 @@
 
 #include<stdio.h>
 
-#include "hash.h"
+#include "queue.h"
 
 typedef struct {
     pair_t * positions;
     table_t edges;
+    uint32_t n_nodes;
+    uint32_t n_edges;
 } map_t;
 
 map_t * load_map(FILE *);
