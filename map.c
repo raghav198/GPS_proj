@@ -1,7 +1,16 @@
 #include "map.h"
-
 #include<stdlib.h>
 
+
+int compair(const void * a, const void * b)
+{
+    pair_t pair1 = *(pair_t*)a;
+    pair_t pair2 = *(pair_t*)b;
+
+    if (pair1.fst == pair2.fst)
+        return pair1.snd - pair2.snd;
+    return pair1.fst - pair2.fst;
+}
 
 map_t * load_map(FILE * fp)
 {
@@ -9,8 +18,9 @@ map_t * load_map(FILE * fp)
     map_t * map = (map_t *) malloc(sizeof(map_t));
     fscanf(fp, "%d %d", &n_nodes, &n_edges);
 
-    map->positions = (pair_t *)malloc(sizeof(pair_t) * n_edges);
-    map->edges = make_table(n_nodes);
+    map->positions = (pair_t *)malloc(sizeof(pair_t) * n_nodes);
+    //map->edges = make_table(n_nodes);
+    map->edges = (pair_t *)malloc(sizeof(pair_t) * n_edges);
 
     map->n_nodes = n_nodes;
     map->n_edges = n_edges;
@@ -25,9 +35,14 @@ map_t * load_map(FILE * fp)
     for (int i = 0; i < n_edges; i++)
     {
         pair_t pair;
-        fscanf(fp, "%ud %ud", &pair.fst, &pair.snd);
-        insert(map->edges, pair);
+        int f, s;
+        fscanf(fp, "%d %d", &f, &s);
+        pair.fst = f;
+        pair.snd = s;
+        map->edges[i] = pair;
     }
+
+    qsort(map->edges, map->n_edges, sizeof(pair_t), &compair);
 
     return map;
 }

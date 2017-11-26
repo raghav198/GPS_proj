@@ -7,7 +7,8 @@
 
 typedef struct {
     pair_t * positions;
-    table_t edges;
+    pair_t * edges;
+    table_t edgesTable;
     uint32_t n_nodes;
     uint32_t n_edges;
 } map_t;
