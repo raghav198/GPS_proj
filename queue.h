@@ -20,6 +20,6 @@ typedef struct {
 
 queue_t * new_queue(int);
 void qadd(queue_t *, pair_t);
-uint32_t qremove(queue_t *);
-
+pair_t qremove(queue_t *);
+void heapify(queue_t *, int);
 #endif

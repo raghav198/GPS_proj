@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include<stdio.h>
+#include<stdbool.h>
 
 #include "queue.h"
 
@@ -15,4 +16,7 @@ typedef struct {
 
 map_t * load_map(FILE *);
 uint32_t search(map_t *, pair_t);
+
+int edge_exists(map_t *, pair_t);
+
 #endif

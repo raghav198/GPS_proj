@@ -46,9 +46,16 @@ void qadd(queue_t * q, pair_t element)
     if (q->load < q->size)
     {
         q->heap[q->load] = element;
-        q->locations[q->load] = element.fst;
+        q->locations[element.fst] = q->load;
         heapify(q, ++q->load);
     }
+}
+
+
+pair_t qremove(queue_t * q)
+{
+    SWAP(&q->heap[0], &q->heap[q->load - 1]);
+    return q->heap[--q->load];
 }
 
 #ifdef TEST_QUEUE
