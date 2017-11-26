@@ -1,6 +1,7 @@
 #include "queue.h"
 
 #include<stdlib.h>
+#include<stdio.h>
 
 void sink(queue_t * q, int size, int root)
 {
@@ -9,13 +10,13 @@ void sink(queue_t * q, int size, int root)
     if (LEFT(root) < size && heap[LEFT(root)].snd  < top.snd)
     {
         SWAP(&heap[root], &heap[LEFT(root)]);
-        SWAP(&(q->locations[root]), &(q->locations[LEFT(root)]));
+        SWAP(&(q->locations[heap[root].fst]), &(q->locations[heap[LEFT(root)].fst]));
         sink(q, size, LEFT(root));
     }
     else if (RIGHT(root) < size && heap[RIGHT(root)].snd < top.snd)
     {
         SWAP(&heap[root], &heap[RIGHT(root)]);
-        SWAP(&(q->locations[root]), &(q->locations[RIGHT(root)]));
+        SWAP(&(q->locations[heap[root].fst]), &(q->locations[heap[RIGHT(root)].fst]));
         sink(q, size, RIGHT(root));
     }
 
@@ -30,7 +31,7 @@ void heapify(queue_t * q, int size)
 queue_t * new_queue(int size)
 {
     queue_t * q = (queue_t *) malloc(sizeof(queue_t));
-    q->heap = (pair_t *) malloc(sizeof(uint32_t) * size);
+    q->heap = (pair_t *) malloc(sizeof(pair_t) * size);
     q->locations = (int *) malloc(sizeof(int) * size);
     for (int i = 0; i < size; i++)
         q->locations[i] = -1;
