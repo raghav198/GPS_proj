@@ -1,7 +1,6 @@
 #include "map.h"
 #include<stdlib.h>
 
-
 int compair(const void * a, const void * b)
 {
     pair_t pair1 = *(pair_t*)a;
@@ -58,7 +57,12 @@ int binsearch(pair_t * edges, uint32_t target, int start, int stop)
         while(mid > 0 && edges[mid - 1].fst == target) mid--;
         return mid;
     }
-
+    if (stop - start == 1)
+    {
+        if (edges[start].fst == target) return binsearch(edges, target, start - 1, stop);
+        else if (edges[stop].fst == target) return binsearch(edges, target, start, stop + 1);
+        else return -1;
+    }
     if (target < edges[mid].fst)
         return binsearch(edges, target, start, mid);
     else if (target > edges[mid].fst)
@@ -75,20 +79,35 @@ int binsearch(pair_t * edges, uint32_t target, int start, int stop)
 }*/
 
 
+void show_path(uint32_t * parents, uint32_t start, uint32_t stop)
+{
+    if (parents[stop] == start) printf("%d->", (int)start);
+    else show_path(parents, start, parents[stop]);
+
+    printf("%d->", (int)stop);
+}
 
 uint32_t search(map_t * map, pair_t stops)
 {
 
     uint32_t * paths = (uint32_t *)malloc(sizeof(uint32_t) * map->n_nodes);
-
+    for (int i = 0; i < map->n_nodes; i++) paths[i] = -1;
+    bool * visited = (bool *)malloc(sizeof(bool) * map->n_nodes);
     uint32_t start = stops.fst;
     uint32_t stop = stops.snd;
     queue_t * open_nodes = new_queue(map->n_nodes);
     qadd(open_nodes, (pair_t){start, 0});
     while(open_nodes->locations[stop] == -1 && open_nodes->load < open_nodes->size)
     {
+
+//        for (int i = 0; i < open_nodes->load; i++)
+//	    printf("%d ", (int)open_nodes->heap[i].fst);
+//        printf("\n\n");
+
+
         pair_t cur_node = qremove(open_nodes);
         uint32_t closest = cur_node.fst;
+        if (closest == -1) break;
         uint32_t dist = cur_node.snd;
 
         int loc = binsearch(map->edges, closest, 0, map->n_edges * 2 - 1);
@@ -97,7 +116,7 @@ uint32_t search(map_t * map, pair_t stops)
         pair_t edge;
         while((edge = map->edges[loc++]).fst == closest)
         {
-
+            if (visited[edge.snd]) continue;
 
             pair_t cur_pos = map->positions[edge.fst];
             pair_t nbr_pos = map->positions[edge.snd];
@@ -108,24 +127,32 @@ uint32_t search(map_t * map, pair_t stops)
             {
                 qadd(open_nodes, (pair_t){edge.snd, dx + dy + dist});
                 paths[edge.snd] = edge.fst;
+                printf("The first path found to node %d is from %d\n", (int)edge.snd, (int)edge.fst);
             }
             else if (dx + dy + dist < open_nodes->heap[open_nodes->locations[edge.snd]].snd)
             {
                 open_nodes->heap[open_nodes->locations[edge.snd]].snd = dx + dy + dist;
                 heapify(open_nodes, open_nodes->load);
                 paths[edge.snd] = edge.fst;
+                printf("The better path found to node %d is from %d\n", (int)edge.snd, (int)edge.fst);
             }
         }
 
         // qadd(open_nodes, cur_node);
-        
+        visited[closest] = true;
     }   
-    if (open_nodes->locations[stop] == -1) return -1;
 
 
-    //for (uint32_t back = stop; back != start; back = paths[back])
-    //    printf("%ud ", back);
-    //printf("\n");
+//    for (uint32_t back = stop; back != start; back = paths[back])
+//        printf("%d ", (int)back);
+//    printf("\n");
+
+    if (paths[stop] == -1 || open_nodes->locations[stop] == -1)
+    {
+        printf("It is impossble to get from Node %d to Node %d on this map!\n", (int)start, (int)stop);
+        return -1;
+    }
+    show_path(paths, start, stop);
     return open_nodes->heap[open_nodes->locations[stop]].snd;
 
 
@@ -135,11 +162,14 @@ uint32_t search(map_t * map, pair_t stops)
 int main()
 {
     // test load_map
-    FILE * fp = fopen("sample/map5x5.txt", "r");
+    FILE * fp = fopen("sample/map.txt", "r");
     map_t * map = load_map(fp);
     printf("Loaded map at %p\n", (void*)map);
 
-    printf("%d\n", search(map, (pair_t){6, 23}));
+    int start, stop;
+    scanf("%d %d", &start, &stop);
+
+    printf("%d\n", search(map, (pair_t){start, stop}));
 
     return 0;
 }

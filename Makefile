@@ -1,7 +1,7 @@
 CFLAGS = -std=c99 -g -Wall -Wshadow --pedantic -Wvla -Werror -Wunreachable-code
 OBJS = map.o hash.o queue.o
 HEADERS = map.h hash.h queue.h
-TEST = QUEUE
+TEST = MAP
 
 test: $(OBJS)
 	gcc -DTEST_$(TEST) $(CFLAGS) *.o -o test

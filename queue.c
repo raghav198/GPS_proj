@@ -54,6 +54,7 @@ void qadd(queue_t * q, pair_t element)
 
 pair_t qremove(queue_t * q)
 {
+    if (q->load == 0) return (pair_t){-1, -1};
     SWAP(&q->heap[0], &q->heap[q->load - 1]);
     return q->heap[--q->load];
 }
